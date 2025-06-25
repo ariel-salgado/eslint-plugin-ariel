@@ -1,0 +1,21 @@
+{
+  "name": "eslint-plugin-ariel",
+  "type": "module",
+  "version": "0.0.1",
+  "packageManager": "pnpm@10.12.2",
+  "description": "My ESLint rules",
+  "author": "Ariel Salgado <ariel.salgado.acevedo@gmail.com>",
+  "license": "MIT",
+  "homepage": "https://github.com/ariel-salgado/eslint-plugin-ariel#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ariel-salgado/eslint-plugin-ariel.git"
+  },
+  "bugs": "https://github.com/ariel-salgado/eslint-plugin-ariel/issues",
+  "keywords": [
+    "eslint-plugin"
+  ],
+  "resolutions": {
+    "eslint-plugin-ariel": "workspace:*"
+  }
+}
