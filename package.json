@@ -1,21 +1,28 @@
 {
-  "name": "eslint-plugin-ariel",
-  "type": "module",
-  "version": "0.0.1",
-  "packageManager": "pnpm@10.12.2",
-  "description": "My ESLint rules",
-  "author": "Ariel Salgado <ariel.salgado.acevedo@gmail.com>",
-  "license": "MIT",
-  "homepage": "https://github.com/ariel-salgado/eslint-plugin-ariel#readme",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/ariel-salgado/eslint-plugin-ariel.git"
-  },
-  "bugs": "https://github.com/ariel-salgado/eslint-plugin-ariel/issues",
-  "keywords": [
-    "eslint-plugin"
-  ],
-  "resolutions": {
-    "eslint-plugin-ariel": "workspace:*"
-  }
+	"name": "eslint-plugin-ariel",
+	"type": "module",
+	"version": "0.0.1",
+	"packageManager": "pnpm@10.12.3",
+	"description": "My ESLint rules",
+	"author": "Ariel Salgado <ariel.salgado.acevedo@gmail.com>",
+	"license": "MIT",
+	"homepage": "https://github.com/ariel-salgado/eslint-plugin-ariel#readme",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/ariel-salgado/eslint-plugin-ariel.git"
+	},
+	"bugs": "https://github.com/ariel-salgado/eslint-plugin-ariel/issues",
+	"keywords": [
+		"eslint-plugin"
+	],
+	"resolutions": {
+		"eslint-plugin-ariel": "workspace:*"
+	},
+	"devDependencies": {
+		"@types/node": "^24.0.4",
+		"@typescript-eslint/utils": "^8.35.0",
+		"eslint": "^9.29.0",
+		"tsdown": "^0.12.9",
+		"typescript": "^5.8.3"
+	}
 }
