@@ -19,9 +19,9 @@
 		"eslint-plugin-ariel": "workspace:*"
 	},
 	"devDependencies": {
-		"@types/node": "^24.0.4",
-		"@typescript-eslint/utils": "^8.35.0",
-		"eslint": "^9.29.0",
+		"@types/node": "^24.0.13",
+		"@typescript-eslint/utils": "^8.36.0",
+		"eslint": "^9.30.1",
 		"tsdown": "^0.12.9",
 		"typescript": "^5.8.3"
 	}
