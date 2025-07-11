@@ -2,8 +2,8 @@
 	"name": "eslint-plugin-ariel",
 	"type": "module",
 	"version": "0.0.1",
-	"packageManager": "pnpm@10.12.3",
-	"description": "My ESLint rules",
+	"packageManager": "pnpm@10.13.1",
+	"description": "A collection of ESLint rules.",
 	"author": "Ariel Salgado <ariel.salgado.acevedo@gmail.com>",
 	"license": "MIT",
 	"homepage": "https://github.com/ariel-salgado/eslint-plugin-ariel#readme",
@@ -11,18 +11,38 @@
 		"type": "git",
 		"url": "git+https://github.com/ariel-salgado/eslint-plugin-ariel.git"
 	},
-	"bugs": "https://github.com/ariel-salgado/eslint-plugin-ariel/issues",
 	"keywords": [
 		"eslint-plugin"
 	],
-	"resolutions": {
-		"eslint-plugin-ariel": "workspace:*"
+	"files": [
+		"dist"
+	],
+	"main": "./dist/index.js",
+	"module": "./dist/index.js",
+	"types": "./dist/index.d.ts",
+	"exports": {
+		".": "./dist/index.js",
+		"./package.json": "./package.json"
+	},
+	"publishConfig": {
+		"access": "public"
+	},
+	"scripts": {
+		"build": "tsdown",
+		"check": "tsc --noEmit"
+	},
+	"peerDependencies": {
+		"eslint": "*"
 	},
 	"devDependencies": {
 		"@types/node": "^24.0.13",
 		"@typescript-eslint/utils": "^8.36.0",
+		"@typescript/native-preview": "7.0.0-dev.20250710.1",
 		"eslint": "^9.30.1",
 		"tsdown": "^0.12.9",
 		"typescript": "^5.8.3"
+	},
+	"resolutions": {
+		"eslint-plugin-ariel": "workspace:*"
 	}
 }
