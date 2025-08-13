@@ -31,8 +31,8 @@
     "build": "tsdown",
     "dev": "tsdown --watch",
     "check": "tsc --noEmit",
-    "lint": "eslint .",
-    "lint:fix": "eslint . --fix",
+    "lint": "eslint",
+    "lint:fix": "pnpm run lint --fix",
     "release": "bumpp && pnpm publish",
     "prepublishOnly": "pnpm run build"
   },
