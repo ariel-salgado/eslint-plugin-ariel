@@ -4,6 +4,33 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+catalogs:
+  default:
+    '@ariel-salgado/eslint-config':
+      specifier: ^0.0.9
+      version: 0.0.9
+    '@types/node':
+      specifier: ^24.2.1
+      version: 24.2.1
+    '@typescript-eslint/utils':
+      specifier: ^8.39.1
+      version: 8.39.1
+    '@typescript/native-preview':
+      specifier: 7.0.0-dev.20250812.1
+      version: 7.0.0-dev.20250812.1
+    bumpp:
+      specifier: ^10.2.3
+      version: 10.2.3
+    eslint:
+      specifier: ^9.33.0
+      version: 9.33.0
+    tsdown:
+      specifier: ^0.14.1
+      version: 0.14.1
+    typescript:
+      specifier: ^5.9.2
+      version: 5.9.2
+
 overrides:
   eslint-plugin-ariel: workspace:*
 
@@ -12,28 +39,28 @@ importers:
   .:
     devDependencies:
       '@ariel-salgado/eslint-config':
-        specifier: ^0.0.9
+        specifier: 'catalog:'
         version: 0.0.9(eslint@9.33.0(jiti@2.5.1))(typescript@5.9.2)
       '@types/node':
-        specifier: ^24.2.1
+        specifier: 'catalog:'
         version: 24.2.1
       '@typescript-eslint/utils':
-        specifier: ^8.39.1
+        specifier: 'catalog:'
         version: 8.39.1(eslint@9.33.0(jiti@2.5.1))(typescript@5.9.2)
       '@typescript/native-preview':
-        specifier: 7.0.0-dev.20250812.1
+        specifier: 'catalog:'
         version: 7.0.0-dev.20250812.1
       bumpp:
-        specifier: ^10.2.3
+        specifier: 'catalog:'
         version: 10.2.3
       eslint:
-        specifier: ^9.33.0
+        specifier: 'catalog:'
         version: 9.33.0(jiti@2.5.1)
       tsdown:
-        specifier: ^0.14.1
+        specifier: 'catalog:'
         version: 0.14.1(@typescript/native-preview@7.0.0-dev.20250812.1)(typescript@5.9.2)
       typescript:
-        specifier: ^5.9.2
+        specifier: 'catalog:'
         version: 5.9.2
 
 packages:
