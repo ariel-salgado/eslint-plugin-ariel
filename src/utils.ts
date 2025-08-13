@@ -2,7 +2,15 @@ import type { Rule } from 'eslint';
 import type { RuleContext } from '@typescript-eslint/utils/ts-eslint';
 import type { RuleListener, RuleWithMeta, RuleWithMetaAndName } from '@typescript-eslint/utils/eslint-utils';
 
-const has_docs = [''];
+const has_docs = [
+	'consistent-chaining',
+	'consistent-list-newline',
+	'curly',
+	'if-newline',
+	'import-dedupe',
+	'prefer-for-of',
+	'top-level-function',
+];
 
 const blob_url = 'https://github.com/ariel-salgado/eslint-plugin-ariel/blob/main/src/rules/';
 
