@@ -1,2 +1,11 @@
 packages:
   - playground
+catalog:
+  '@ariel-salgado/eslint-config': ^0.0.9
+  '@types/node': ^24.2.1
+  '@typescript-eslint/utils': ^8.39.1
+  '@typescript/native-preview': 7.0.0-dev.20250812.1
+  bumpp: ^10.2.3
+  eslint: ^9.33.0
+  tsdown: ^0.14.1
+  typescript: ^5.9.2
