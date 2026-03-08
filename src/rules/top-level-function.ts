@@ -65,7 +65,7 @@ export default create_eslint_rule<Options, MessageIds>({
 						const code = context.sourceCode.text;
 						const text_name = code.slice(id.range[0], id.range[1]);
 						const text_args = fn.params.length
-							? code.slice(fn.params[0].range[0], fn.params[fn.params.length - 1].range[1])
+							? code.slice(fn.params[0].range[0], fn.params.at(-1).range[1])
 							: '';
 						const text_body = body.type === 'BlockStatement'
 							? code.slice(body.range[0], body.range[1])

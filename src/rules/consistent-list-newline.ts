@@ -28,6 +28,9 @@ export type Options = [{
 	TSTypeParameterInstantiation?: boolean;
 }];
 
+const NEW_LINE_PATTERN = /(\r\n|\n)/g;
+const DELIMETER_PATTERN = /(?:,|;)$/;
+
 export default create_eslint_rule<Options, MessageIds>({
 	name: RULE_NAME,
 	meta: {
@@ -124,30 +127,14 @@ export default create_eslint_rule<Options, MessageIds>({
 		function removeLines(fixer: RuleFixer, start: number, end: number, delimiter?: string): RuleFix {
 			const range = [start, end] as const;
 			const code = context.sourceCode.text.slice(...range);
-			return fixer.replaceTextRange(range, code.replace(/(\r\n|\n)/g, delimiter ?? ''));
+			return fixer.replaceTextRange(range, code.replace(NEW_LINE_PATTERN, delimiter ?? ''));
 		}
 
 		function getDelimiter(root: TSESTree.Node, current: TSESTree.Node): string | undefined {
 			if (root.type !== 'TSInterfaceDeclaration' && root.type !== 'TSTypeLiteral')
 				return;
 			const currentContent = context.sourceCode.text.slice(current.range[0], current.range[1]);
-			return currentContent.match(/(?:,|;)$/) ? undefined : ',';
-		}
-
-		function hasComments(current: TSESTree.Node): boolean {
-			let program: TSESTree.Node = current;
-			while (program.type !== 'Program')
-				program = program.parent;
-
-			const currentRange = current.range;
-
-			return !!program.comments?.some((comment) => {
-				const commentRange = comment.range;
-				return (
-					commentRange[0] > currentRange[0]
-					&& commentRange[1] < currentRange[1]
-				);
-			});
+			return DELIMETER_PATTERN.test(currentContent) ? undefined : ',';
 		}
 
 		function check(
@@ -177,7 +164,7 @@ export default create_eslint_rule<Options, MessageIds>({
 			if (startToken?.type !== 'Punctuator')
 				startToken = context.sourceCode.getTokenBefore(items[0]);
 
-			const endToken = context.sourceCode.getTokenAfter(items[items.length - 1]);
+			const endToken = context.sourceCode.getTokenAfter(items.at(-1)!);
 			const startLine = startToken!.loc.start.line;
 
 			if (startToken!.loc.start.line === endToken!.loc.end.line)
@@ -237,7 +224,7 @@ export default create_eslint_rule<Options, MessageIds>({
 				: node.range[1];
 			const endLoc = context.sourceCode.getLocFromIndex(endRange);
 
-			const lastItem = items[items.length - 1]!;
+			const lastItem = items.at(-1)!;
 			if (mode === 'newline' && endLoc.line === lastLine) {
 				context.report({
 					node: lastItem,
@@ -382,4 +369,20 @@ export default create_eslint_rule<Options, MessageIds>({
 });
 
 // eslint-disable-next-line unused-imports/no-unused-vars, ts/explicit-function-return-type
-function exportType<A, B extends A>() {}
+function exportType<A, B extends A>() { }
+
+function hasComments(current: TSESTree.Node): boolean {
+	let program: TSESTree.Node = current;
+	while (program.type !== 'Program')
+		program = program.parent;
+
+	const currentRange = current.range;
+
+	return !!program.comments?.some((comment) => {
+		const commentRange = comment.range;
+		return (
+			commentRange[0] > currentRange[0]
+			&& commentRange[1] < currentRange[1]
+		);
+	});
+}

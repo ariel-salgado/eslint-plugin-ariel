@@ -4,6 +4,8 @@ export const RULE_NAME = 'no-import-dist';
 export type MessageIds = 'noImportDist';
 export type Options = [];
 
+const DIST_PATTERN = /\/dist(\/|$)/;
+
 export default create_eslint_rule<Options, MessageIds>({
 	name: RULE_NAME,
 	meta: {
@@ -18,11 +20,6 @@ export default create_eslint_rule<Options, MessageIds>({
 	},
 	defaultOptions: [],
 	create: (context) => {
-		function isDist(path: string): boolean {
-			return Boolean((path.startsWith('.') && path.match(/\/dist(\/|$)/)))
-				|| path === 'dist';
-		}
-
 		return {
 			ImportDeclaration: (node) => {
 				if (isDist(node.source.value)) {
@@ -38,3 +35,8 @@ export default create_eslint_rule<Options, MessageIds>({
 		};
 	},
 });
+
+function isDist(path: string): boolean {
+	return Boolean((path.startsWith('.') && path.match(DIST_PATTERN)))
+		|| path === 'dist';
+}

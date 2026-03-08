@@ -21,24 +21,6 @@ export default create_eslint_rule<Options, MessageIds>({
 	},
 	defaultOptions: [],
 	create: (context) => {
-		function require_curly(body: TSESTree.Statement | TSESTree.Expression): boolean {
-			if (!body)
-				return false;
-			// already has curly brackets
-			if (body.type === 'BlockStatement')
-				return true;
-			// nested statements
-			if (['IfStatement', 'WhileStatement', 'DoWhileStatement', 'ForStatement', 'ForInStatement', 'ForOfStatement'].includes(body.type))
-				return true;
-			const statement = body.type === 'ExpressionStatement'
-				? body.expression
-				: body;
-			// multiline
-			if (statement.loc.start.line !== statement.loc.end.line)
-				return true;
-			return false;
-		}
-
 		function wrap_curly_if_needed(body: TSESTree.Statement): void {
 			if (body.type === 'BlockStatement')
 				return;
@@ -104,3 +86,21 @@ export default create_eslint_rule<Options, MessageIds>({
 		};
 	},
 });
+
+function require_curly(body: TSESTree.Statement | TSESTree.Expression): boolean {
+	if (!body)
+		return false;
+	// already has curly brackets
+	if (body.type === 'BlockStatement')
+		return true;
+	// nested statements
+	if (['IfStatement', 'WhileStatement', 'DoWhileStatement', 'ForStatement', 'ForInStatement', 'ForOfStatement'].includes(body.type))
+		return true;
+	const statement = body.type === 'ExpressionStatement'
+		? body.expression
+		: body;
+	// multiline
+	if (statement.loc.start.line !== statement.loc.end.line)
+		return true;
+	return false;
+}
