@@ -9,4 +9,11 @@ export default defineConfig({
 	clean: true,
 	shims: true,
 	format: ['esm'],
+	deps: {
+		neverBundle: [
+			'eslint',
+			'typescript',
+			/^@typescript-eslint\//,
+		],
+	},
 });
