@@ -1,6 +1,6 @@
-import type { Rule } from 'eslint';
-import type { RuleContext } from '@typescript-eslint/utils/ts-eslint';
 import type { RuleListener, RuleWithMeta, RuleWithMetaAndName } from '@typescript-eslint/utils/eslint-utils';
+import type { RuleContext } from '@typescript-eslint/utils/ts-eslint';
+import type { Rule } from 'eslint';
 
 const has_docs = [
 	'consistent-chaining',
@@ -36,7 +36,7 @@ function rule_creator(url_creator: (name: string) => string) {
 		...rule
 	}: Readonly<
 		RuleWithMetaAndName<TOptions, TMessageIds>
-    >): RuleModule<TOptions> {
+	>): RuleModule<TOptions> {
 		return create_rule<TOptions, TMessageIds>({
 			meta: {
 				...meta,
