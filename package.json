@@ -2,7 +2,7 @@
   "name": "eslint-plugin-ariel",
   "type": "module",
   "version": "0.0.3",
-  "packageManager": "pnpm@10.13.1",
+  "packageManager": "bun@1.3.10",
   "description": "A collection of ESLint rules.",
   "author": "Ariel Salgado <ariel.salgado.acevedo@gmail.com>",
   "license": "MIT",
@@ -32,24 +32,33 @@
     "dev": "tsdown --watch",
     "check": "tsc --noEmit",
     "lint": "eslint",
-    "lint:fix": "pnpm run lint --fix",
-    "release": "bumpp && pnpm publish",
-    "prepublishOnly": "pnpm run build"
+    "lint:fix": "eslint --fix",
+    "release": "bumpp && bun publish",
+    "prepublishOnly": "bun run build"
   },
   "peerDependencies": {
     "eslint": "*"
   },
   "devDependencies": {
-    "@ariel-salgado/eslint-config": "catalog:",
-    "@types/node": "catalog:",
-    "@typescript-eslint/utils": "catalog:",
-    "@typescript/native-preview": "catalog:",
-    "bumpp": "catalog:",
-    "eslint": "catalog:",
-    "tsdown": "catalog:",
-    "typescript": "catalog:"
+    "@ariel-salgado/eslint-config": "0.5.0",
+    "@types/node": "25.3.5",
+    "@typescript-eslint/utils": "8.56.1",
+    "@typescript/native-preview": "7.0.0-dev.20260308.1",
+    "bumpp": "10.4.1",
+    "eslint": "10.0.3",
+    "tsdown": "0.21.0",
+    "typescript": "5.9.3"
   },
-  "resolutions": {
-    "eslint-plugin-ariel": "workspace:*"
+  "workspaces": {
+    "catalog": {
+      "@ariel-salgado/eslint-config": "^0.5.0",
+      "@types/node": "^25.3.5",
+      "@typescript-eslint/utils": "^8.56.1",
+      "@typescript/native-preview": "7.0.0-dev.20260308.1",
+      "bumpp": "^10.4.1",
+      "eslint": "^10.0.3",
+      "tsdown": "^0.21.10",
+      "typescript": "^5.9.3"
+    }
   }
 }
