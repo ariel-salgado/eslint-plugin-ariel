@@ -1,0 +1,19 @@
+telemetry = false
+
+[run]
+bun = true
+shell = "system"
+
+[workspaces]
+enabled = true
+
+[install]
+exact = true
+auto = "auto"
+linker = "isolated"
+
+[build]
+typescript = true
+
+[package-manager]
+default = "bun"
