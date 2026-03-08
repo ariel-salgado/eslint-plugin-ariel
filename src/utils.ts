@@ -7,6 +7,7 @@ const hasDocs = [
 	'consistent-chaining',
 	'consistent-list-newline',
 	'curly',
+	'enforce-meaningful-names',
 	'if-newline',
 	'prefer-for-of',
 	'import-dedupe',

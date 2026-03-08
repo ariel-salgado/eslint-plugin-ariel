@@ -3,6 +3,7 @@ import type { ESLint, Linter } from 'eslint';
 import consistentChaining from './rules/consistent-chaining';
 import consistentListNewline from './rules/consistent-list-newline';
 import curly from './rules/curly';
+import enforceMeaningfulNames from './rules/enforce-meaningful-names';
 import ifNewline from './rules/if-newline';
 import importDedupe from './rules/import-dedupe';
 import noImportDist from './rules/no-import-dist';
@@ -24,6 +25,7 @@ const plugin = {
 		'consistent-chaining': consistentChaining,
 		'consistent-list-newline': consistentListNewline,
 		'curly': curly,
+		'enforce-meaningful-names': enforceMeaningfulNames,
 		'if-newline': ifNewline,
 		'prefer-for-of': preferForOf,
 		'import-dedupe': importDedupe,
