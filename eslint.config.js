@@ -1,7 +1,6 @@
-import ariel from '@ariel-salgado/eslint-config';
+import { defineConfig } from '@ariel-salgado/eslint-config';
 
-export default ariel ({
+export default defineConfig({
 	type: 'lib',
-	pnpm: true,
 	typescript: true,
 });
