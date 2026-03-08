@@ -1,38 +1,43 @@
 import type { ESLint, Linter } from 'eslint';
 
-import consistent_chaining from './rules/consistent-chaining';
-import consistent_list_newline from './rules/consistent-list-newline';
+import consistentChaining from './rules/consistent-chaining';
+import consistentListNewline from './rules/consistent-list-newline';
 import curly from './rules/curly';
-import if_newline from './rules/if-newline';
-import import_dedupe from './rules/import-dedupe';
-import no_import_dist from './rules/no-import-dist';
-import no_import_node_modules_by_path from './rules/no-import-node-modules-by-path';
-import prefer_for_of from './rules/prefer-for-of';
-import top_level_function from './rules/top-level-function';
+import ifNewline from './rules/if-newline';
+import importDedupe from './rules/import-dedupe';
+import noImportDist from './rules/no-import-dist';
+import noImportNodeModulesByPath from './rules/no-import-node-modules-by-path';
+import noTopLevelAwait from './rules/no-top-level-await';
+import noTsExportEqual from './rules/no-ts-export-equal';
+import preferForOf from './rules/prefer-for-of';
+import topLevelFunction from './rules/top-level-function';
 
 import { version } from '../package.json';
 
-export const plugin = {
+const plugin = {
 	meta: {
 		name: 'ariel',
 		version,
 	},
+	// @keep-sorted
 	rules: {
-		'consistent-chaining': consistent_chaining,
-		'consistent-list-newline': consistent_list_newline,
+		'consistent-chaining': consistentChaining,
+		'consistent-list-newline': consistentListNewline,
 		'curly': curly,
-		'if-newline': if_newline,
-		'import-dedupe': import_dedupe,
-		'no-import-dist': no_import_dist,
-		'no-import-node-modules-by-path': no_import_node_modules_by_path,
-		'top-level-function': top_level_function,
-		'prefer-for-of': prefer_for_of,
+		'if-newline': ifNewline,
+		'prefer-for-of': preferForOf,
+		'import-dedupe': importDedupe,
+		'no-import-dist': noImportDist,
+		'no-import-node-modules-by-path': noImportNodeModulesByPath,
+		'no-top-level-await': noTopLevelAwait,
+		'no-ts-export-equal': noTsExportEqual,
+		'top-level-function': topLevelFunction,
 	},
 } satisfies ESLint.Plugin;
 
 export default plugin;
 
-type RuleDefinitions = (typeof plugin)['rules'];
+type RuleDefinitions = typeof plugin['rules'];
 
 export type RuleOptions = {
 	[K in keyof RuleDefinitions]: RuleDefinitions[K]['defaultOptions']
