@@ -4,7 +4,7 @@ import type { RuleFix, RuleFixer, RuleListener } from '@typescript-eslint/utils/
 import { create_eslint_rule } from '../utils';
 
 export const RULE_NAME = 'consistent-list-newline';
-export type MessageIds = 'should_wrap' | 'should_not_wrap';
+export type MessageIds = 'shouldWrap' | 'shouldNotWrap';
 export type Options = [{
 	ArrayExpression?: boolean;
 	ArrayPattern?: boolean;
@@ -13,6 +13,7 @@ export type Options = [{
 	ExportNamedDeclaration?: boolean;
 	FunctionDeclaration?: boolean;
 	FunctionExpression?: boolean;
+	IfStatement?: boolean;
 	ImportDeclaration?: boolean;
 	JSONArrayExpression?: boolean;
 	JSONObjectExpression?: boolean;
@@ -31,6 +32,10 @@ export type Options = [{
 const NEW_LINE_PATTERN = /(\r\n|\n)/g;
 const DELIMETER_PATTERN = /(?:,|;)$/;
 
+function isCommaToken(token: TSESTree.Token): boolean {
+	return token.type === 'Punctuator' && token.value === ',';
+}
+
 export default create_eslint_rule<Options, MessageIds>({
 	name: RULE_NAME,
 	meta: {
@@ -39,77 +44,36 @@ export default create_eslint_rule<Options, MessageIds>({
 			description: 'Having line breaks styles to object, array and named imports',
 		},
 		fixable: 'whitespace',
-		schema: [
-			{
-				type: 'object',
-				properties: {
-					ArrayExpression: {
-						type: 'boolean',
-					},
-					ArrayPattern: {
-						type: 'boolean',
-					},
-					ArrowFunctionExpression: {
-						type: 'boolean',
-					},
-					CallExpression: {
-						type: 'boolean',
-					},
-					ExportNamedDeclaration: {
-						type: 'boolean',
-					},
-					FunctionDeclaration: {
-						type: 'boolean',
-					},
-					FunctionExpression: {
-						type: 'boolean',
-					},
-					ImportDeclaration: {
-						type: 'boolean',
-					},
-					JSONArrayExpression: {
-						type: 'boolean',
-					},
-					JSONObjectExpression: {
-						type: 'boolean',
-					},
-					JSXOpeningElement: {
-						type: 'boolean',
-					},
-					NewExpression: {
-						type: 'boolean',
-					},
-					ObjectExpression: {
-						type: 'boolean',
-					},
-					ObjectPattern: {
-						type: 'boolean',
-					},
-					TSFunctionType: {
-						type: 'boolean',
-					},
-					TSInterfaceDeclaration: {
-						type: 'boolean',
-					},
-					TSTupleType: {
-						type: 'boolean',
-					},
-					TSTypeLiteral: {
-						type: 'boolean',
-					},
-					TSTypeParameterDeclaration: {
-						type: 'boolean',
-					},
-					TSTypeParameterInstantiation: {
-						type: 'boolean',
-					},
-				} satisfies Record<keyof Options[0], { type: 'boolean' }>,
-				additionalProperties: false,
-			},
-		],
+		schema: [{
+			type: 'object',
+			properties: {
+				ArrayExpression: { type: 'boolean' },
+				ArrayPattern: { type: 'boolean' },
+				ArrowFunctionExpression: { type: 'boolean' },
+				CallExpression: { type: 'boolean' },
+				ExportNamedDeclaration: { type: 'boolean' },
+				FunctionDeclaration: { type: 'boolean' },
+				FunctionExpression: { type: 'boolean' },
+				IfStatement: { type: 'boolean' },
+				ImportDeclaration: { type: 'boolean' },
+				JSONArrayExpression: { type: 'boolean' },
+				JSONObjectExpression: { type: 'boolean' },
+				JSXOpeningElement: { type: 'boolean' },
+				NewExpression: { type: 'boolean' },
+				ObjectExpression: { type: 'boolean' },
+				ObjectPattern: { type: 'boolean' },
+				TSFunctionType: { type: 'boolean' },
+				TSInterfaceDeclaration: { type: 'boolean' },
+				TSTupleType: { type: 'boolean' },
+				TSTypeLiteral: { type: 'boolean' },
+				TSTypeParameterDeclaration: { type: 'boolean' },
+				TSTypeParameterInstantiation: { type: 'boolean' },
+			} satisfies Record<keyof Options[0], { type: 'boolean' }>,
+			additionalProperties: false,
+		}],
 		messages: {
-			should_wrap: 'Should have line breaks between items, in node {{name}}',
-			should_not_wrap: 'Should not have line breaks between items, in node {{name}}',
+			shouldWrap: 'Should have line breaks between items, in node {{name}}',
+			shouldNotWrap: 'Should not have line breaks between items, in node {{name}}',
 		},
 	},
 	defaultOptions: [{}],
@@ -117,13 +81,13 @@ export default create_eslint_rule<Options, MessageIds>({
 		const multilineNodes = new Set([
 			'ArrayExpression',
 			'FunctionDeclaration',
+			'IfStatement',
 			'ObjectExpression',
 			'ObjectPattern',
 			'TSTypeLiteral',
 			'TSTupleType',
 			'TSInterfaceDeclaration',
 		]);
-
 		function removeLines(fixer: RuleFixer, start: number, end: number, delimiter?: string): RuleFix {
 			const range = [start, end] as const;
 			const code = context.sourceCode.text.slice(...range);
@@ -143,14 +107,14 @@ export default create_eslint_rule<Options, MessageIds>({
 			nextNode?: TSESTree.Node,
 		): void {
 			const items = children.filter(Boolean) as TSESTree.Node[];
-
 			if (items.length === 0)
 				return;
 
+			// Look for the opening bracket, we first try to get the first token of the parent node
+			// and fallback to the token before the first item
 			let startToken = ['CallExpression', 'NewExpression'].includes(node.type)
 				? undefined
 				: context.sourceCode.getFirstToken(node);
-
 			if (node.type === 'CallExpression') {
 				startToken = context.sourceCode.getTokenAfter(
 					node.typeArguments
@@ -160,7 +124,6 @@ export default create_eslint_rule<Options, MessageIds>({
 							: node.callee,
 				);
 			}
-
 			if (startToken?.type !== 'Punctuator')
 				startToken = context.sourceCode.getTokenBefore(items[0]);
 
@@ -185,7 +148,7 @@ export default create_eslint_rule<Options, MessageIds>({
 				if (mode === 'newline' && currentStart === lastLine) {
 					context.report({
 						node: item,
-						messageId: 'should_wrap',
+						messageId: 'shouldWrap',
 						data: {
 							name: node.type,
 						},
@@ -202,7 +165,7 @@ export default create_eslint_rule<Options, MessageIds>({
 					if (content.includes('\n')) {
 						context.report({
 							node: item,
-							messageId: 'should_not_wrap',
+							messageId: 'shouldNotWrap',
 							data: {
 								name: node.type,
 							},
@@ -228,7 +191,7 @@ export default create_eslint_rule<Options, MessageIds>({
 			if (mode === 'newline' && endLoc.line === lastLine) {
 				context.report({
 					node: lastItem,
-					messageId: 'should_wrap',
+					messageId: 'shouldWrap',
 					data: {
 						name: node.type,
 					},
@@ -241,14 +204,15 @@ export default create_eslint_rule<Options, MessageIds>({
 				// If there is only one multiline item, we allow the closing bracket to be on the a different line
 				if (items.length === 1 && !(multilineNodes as Set<AST_NODE_TYPES>).has(node.type))
 					return;
-				if (context.sourceCode.getCommentsAfter(lastItem).length > 0)
+				const nextToken = context.sourceCode.getTokenAfter(lastItem);
+				if (context.sourceCode.getCommentsAfter(nextToken && isCommaToken(nextToken) ? nextToken : lastItem).length > 0)
 					return;
 
 				const content = context.sourceCode.text.slice(lastItem.range[1], endRange);
 				if (content.includes('\n')) {
 					context.report({
 						node: lastItem,
-						messageId: 'should_not_wrap',
+						messageId: 'shouldNotWrap',
 						data: {
 							name: node.type,
 						},
@@ -261,7 +225,7 @@ export default create_eslint_rule<Options, MessageIds>({
 			}
 		}
 
-		const listenser = {
+		const listener = {
 			ObjectExpression: (node) => {
 				check(node, node.properties);
 			},
@@ -292,6 +256,9 @@ export default create_eslint_rule<Options, MessageIds>({
 					node.params,
 					node.returnType || node.body,
 				);
+			},
+			IfStatement: (node) => {
+				check(node, [node.test], node.consequent);
 			},
 			ArrowFunctionExpression: (node) => {
 				if (node.params.length <= 1)
@@ -351,20 +318,19 @@ export default create_eslint_rule<Options, MessageIds>({
 			},
 		} satisfies RuleListener;
 
-		type KeysListener = keyof typeof listenser;
+		type KeysListener = keyof typeof listener;
 		type KeysOptions = keyof Options[0];
 
 		// Type assertion to check if all keys are exported
 		exportType<KeysListener, KeysOptions>();
 		exportType<KeysOptions, KeysListener>();
 
-		for (const key of Object.keys(options) as KeysOptions[]) {
-			if (options[key as keyof typeof options] === false) {
-				delete listenser[key];
-			}
+		for (const key of Object.keys(options)) {
+			if (options[key as KeysOptions] === false)
+				delete listener[key as KeysOptions];
 		}
 
-		return listenser;
+		return listener;
 	},
 });
 
@@ -375,7 +341,6 @@ function hasComments(current: TSESTree.Node): boolean {
 	let program: TSESTree.Node = current;
 	while (program.type !== 'Program')
 		program = program.parent;
-
 	const currentRange = current.range;
 
 	return !!program.comments?.some((comment) => {

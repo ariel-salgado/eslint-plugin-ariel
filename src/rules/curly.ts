@@ -21,7 +21,7 @@ export default create_eslint_rule<Options, MessageIds>({
 	},
 	defaultOptions: [],
 	create: (context) => {
-		function wrap_curly_if_needed(body: TSESTree.Statement): void {
+		function wrapCurlyIfNeeded(body: TSESTree.Statement): void {
 			if (body.type === 'BlockStatement')
 				return;
 			context.report({
@@ -36,11 +36,11 @@ export default create_eslint_rule<Options, MessageIds>({
 		}
 
 		function check(bodies: TSESTree.Statement[], additionalChecks: TSESTree.Expression[] = []): void {
-			const requires = [...bodies, ...additionalChecks].map(body => require_curly(body));
+			const requires = [...bodies, ...additionalChecks].map(body => requireCurly(body));
 
 			// If any of the bodies requires curly brackets, wrap all of them to be consistent
 			if (requires.some(i => i))
-				bodies.map(body => wrap_curly_if_needed(body));
+				bodies.map(body => wrapCurlyIfNeeded(body));
 		}
 
 		return {
@@ -87,7 +87,7 @@ export default create_eslint_rule<Options, MessageIds>({
 	},
 });
 
-function require_curly(body: TSESTree.Statement | TSESTree.Expression): boolean {
+function requireCurly(body: TSESTree.Statement | TSESTree.Expression): boolean {
 	if (!body)
 		return false;
 	// already has curly brackets

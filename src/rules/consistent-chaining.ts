@@ -3,8 +3,7 @@ import type { TSESTree } from '@typescript-eslint/utils';
 import { create_eslint_rule } from '../utils';
 
 export const RULE_NAME = 'consistent-chaining';
-
-export type MessageIds = 'should_wrap' | 'should_not_wrap';
+export type MessageIds = 'shouldWrap' | 'shouldNotWrap';
 export type Options = [
 	{
 		allowLeadingPropertyAccess?: boolean;
@@ -33,8 +32,8 @@ export default create_eslint_rule<Options, MessageIds>({
 			},
 		],
 		messages: {
-			should_wrap: 'Should have line breaks between items, in node {{name}}',
-			should_not_wrap: 'Should not have line breaks between items, in node {{name}}',
+			shouldWrap: 'Should have line breaks between items, in node {{name}}',
+			shouldNotWrap: 'Should not have line breaks between items, in node {{name}}',
 		},
 	},
 	defaultOptions: [
@@ -43,27 +42,23 @@ export default create_eslint_rule<Options, MessageIds>({
 		},
 	],
 	create: (context) => {
-		const known_root = new WeakSet<any>();
+		const knownRoot = new WeakSet<any>();
 
 		const {
-			allowLeadingPropertyAccess: allow_leading_property_access = true,
+			allowLeadingPropertyAccess = true,
 		} = context.options[0] || {};
 
 		return {
 			MemberExpression(node) {
 				let root: TSESTree.Node = node;
-
 				while (root.parent && (root.parent.type === 'MemberExpression' || root.parent.type === 'CallExpression'))
 					root = root.parent;
-
-				if (known_root.has(root))
+				if (knownRoot.has(root))
 					return;
-
-				known_root.add(root);
+				knownRoot.add(root);
 
 				const members: TSESTree.MemberExpression[] = [];
 				let current: TSESTree.Node | undefined = root;
-
 				while (current) {
 					switch (current.type) {
 						case 'MemberExpression': {
@@ -81,47 +76,47 @@ export default create_eslint_rule<Options, MessageIds>({
 							break;
 						}
 						default: {
+							// Other type of note, that means we are probably reaching out the head
 							current = undefined;
 							break;
 						}
 					}
 				}
 
-				let leading_property_access = allow_leading_property_access;
+				let leadingPropertyAcccess = allowLeadingPropertyAccess;
 				let mode: 'single' | 'multi' | null = null;
 
 				for (const m of members) {
 					const token = context.sourceCode.getTokenBefore(m.property)!;
-					const token_before = context.sourceCode.getTokenBefore(token)!;
-					const current_mode: 'single' | 'multi' = token.loc.start.line === token_before.loc.end.line ? 'single' : 'multi';
+					const tokenBefore = context.sourceCode.getTokenBefore(token)!;
+					const currentMode: 'single' | 'multi' = token.loc.start.line === tokenBefore.loc.end.line ? 'single' : 'multi';
 					const object = m.object.type === 'TSNonNullExpression' ? m.object.expression : m.object;
 					if (
-						leading_property_access
+						leadingPropertyAcccess
 						&& (object.type === 'ThisExpression' || object.type === 'Identifier' || object.type === 'MemberExpression' || object.type === 'Literal')
-						&& current_mode === 'single'
+						&& currentMode === 'single'
 					) {
 						continue;
 					}
 
-					leading_property_access = false;
-
+					leadingPropertyAcccess = false;
 					if (mode == null) {
-						mode = current_mode;
+						mode = currentMode;
 						continue;
 					}
 
-					if (mode !== current_mode) {
+					if (mode !== currentMode) {
 						context.report({
-							messageId: mode === 'single' ? 'should_not_wrap' : 'should_wrap',
+							messageId: mode === 'single' ? 'shouldNotWrap' : 'shouldWrap',
 							loc: token.loc,
 							data: {
 								name: root.type,
 							},
 							fix(fixer) {
 								if (mode === 'multi')
-									return fixer.insertTextAfter(token_before, '\n');
+									return fixer.insertTextAfter(tokenBefore, '\n');
 								else
-									return fixer.removeRange([token_before.range[1], token.range[0]]);
+									return fixer.removeRange([tokenBefore.range[1], token.range[0]]);
 							},
 						});
 					}

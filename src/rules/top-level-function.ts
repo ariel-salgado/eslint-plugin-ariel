@@ -50,7 +50,7 @@ export default create_eslint_rule<Options, MessageIds>({
 					return;
 				}
 
-				const fn = declaration.init;
+				const fnExpression = declaration.init;
 				const body = declaration.init.body;
 				const id = declaration.id;
 
@@ -63,22 +63,22 @@ export default create_eslint_rule<Options, MessageIds>({
 					messageId: 'topLevelFunctionDeclaration',
 					fix(fixer) {
 						const code = context.sourceCode.text;
-						const text_name = code.slice(id.range[0], id.range[1]);
-						const text_args = fn.params.length
-							? code.slice(fn.params[0].range[0], fn.params.at(-1).range[1])
+						const textName = code.slice(id.range[0], id.range[1]);
+						const textArgs = fnExpression.params.length
+							? code.slice(fnExpression.params[0].range[0], fnExpression.params.at(-1)!.range[1])
 							: '';
-						const text_body = body.type === 'BlockStatement'
+						const textBody = body.type === 'BlockStatement'
 							? code.slice(body.range[0], body.range[1])
 							: `{\n  return ${code.slice(body.range[0], body.range[1])}\n}`;
-						const text_generic = fn.typeParameters
-							? code.slice(fn.typeParameters.range[0], fn.typeParameters.range[1])
+						const textGeneric = fnExpression.typeParameters
+							? code.slice(fnExpression.typeParameters.range[0], fnExpression.typeParameters.range[1])
 							: '';
-						const text_type_return = fn.returnType
-							? code.slice(fn.returnType.range[0], fn.returnType.range[1])
+						const textTypeReturn = fnExpression.returnType
+							? code.slice(fnExpression.returnType.range[0], fnExpression.returnType.range[1])
 							: '';
-						const text_async = fn.async ? 'async ' : '';
+						const textAsync = fnExpression.async ? 'async ' : '';
 
-						const final = `${text_async}function ${text_name} ${text_generic}(${text_args})${text_type_return} ${text_body}`;
+						const final = `${textAsync}function ${textName} ${textGeneric}(${textArgs})${textTypeReturn} ${textBody}`;
 						return fixer.replaceTextRange([node.range[0], node.range[1]], final);
 					},
 				});

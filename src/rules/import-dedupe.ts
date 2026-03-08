@@ -38,7 +38,7 @@ export default create_eslint_rule<Options, MessageIds>({
 							fix(fixer) {
 								const s = n.range[0];
 								let e = n.range[1];
-								if (context.getSourceCode().text[e] === ',')
+								if (context.sourceCode.text[e] === ',')
 									e += 1;
 								return fixer.removeRange([s, e]);
 							},
