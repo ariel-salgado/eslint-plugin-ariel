@@ -7,7 +7,7 @@ get_version() {
 
 bump_version() {
   echo "🔼 Bumping version..."
-  pnpm exec bumpp --no-commit --no-tag --no-push --yes
+  bunx bumpp --no-commit --no-tag --no-push --yes
 }
 
 commit_and_tag() {
@@ -36,10 +36,10 @@ publish_package() {
   shift
   if echo "$version" | grep -qE '\-(alpha|beta|rc|next|canary)'; then
     echo "📦 Publishing prerelease version $version with --tag next..."
-    pnpm publish --tag next --no-git-checks "$@"
+    bun publish --tag next --no-git-checks "$@"
   else
     echo "📦 Publishing stable version $version..."
-    pnpm publish --no-git-checks "$@"
+    bun publish --no-git-checks "$@"
   fi
 }
 
