@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/env/usr bash
 set -e
 
 get_version() {
