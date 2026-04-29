@@ -1,6 +1,8 @@
 import { defineConfig } from '@ariel-salgado/eslint-config';
 
-export default defineConfig({
+const config = defineConfig({
 	type: 'lib',
 	typescript: true,
 });
+
+export default config;
